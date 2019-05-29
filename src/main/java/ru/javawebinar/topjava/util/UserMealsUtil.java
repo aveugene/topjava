@@ -31,17 +31,22 @@ public class UserMealsUtil {
         List<UserMealWithExceed> mealExceedList = new ArrayList<>();
         mealList.forEach(meal -> {
             if (TimeUtil.isBetween(meal.getTime(), startTime, endTime)) {
-                mealExceedList.add(new UserMealWithExceed(meal, caloriesMap.get(meal.getDate()) > caloriesPerDay));
+                mealExceedList.add(UserMealToExceed(meal, caloriesMap.get(meal.getDate()) > caloriesPerDay));
             }
         });
         return mealExceedList;
     }
 
     private static List<UserMealWithExceed> getFilteredWithExceededStream(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        Map<LocalDate, Integer> caloriesMap = mealList.stream().collect(Collectors.groupingBy(UserMeal::getDate, Collectors.summingInt(UserMeal::getCalories)));
+        Map<LocalDate, Integer> caloriesMap = mealList.stream()
+                .collect(Collectors.groupingBy(UserMeal::getDate, Collectors.summingInt(UserMeal::getCalories)));
         return mealList.stream()
                 .filter(meal -> TimeUtil.isBetween(meal.getTime(), startTime, endTime))
-                .map(meal -> new UserMealWithExceed(meal, caloriesMap.get(meal.getDate()) > caloriesPerDay))
+                .map(meal -> UserMealToExceed(meal, caloriesMap.get(meal.getDate()) > caloriesPerDay))
                 .collect(Collectors.toList());
+    }
+
+    private static UserMealWithExceed UserMealToExceed(UserMeal meal, boolean exceed) {
+        return new UserMealWithExceed(meal.getDateTime(), meal.getDescription(), meal.getCalories(), exceed);
     }
 }
