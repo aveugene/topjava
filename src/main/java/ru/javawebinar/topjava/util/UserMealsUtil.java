@@ -39,23 +39,19 @@ public class UserMealsUtil {
 
     private static List<UserMealWithExceed> getFilteredWithExceededStream(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
 
-        Map<LocalDate, Integer> cm = new HashMap<>();
+        Map<LocalDate, Integer> caloriesMap = new HashMap<>();
         return mealList.stream()
-                .sorted(Comparator.comparing(UserMeal::getDate))
-                .map(userMeal -> {
-                    int mealCalories = cm.getOrDefault(userMeal.getDate(), 0);
-                    cm.put(userMeal.getDate(), mealCalories + userMeal.getCalories());
-                    return toMealWithExceed(userMeal, cm.get(userMeal.getDate()) > caloriesPerDay);
-                })
                 .collect(Collector.of(
                         ArrayList::new,
                         (previousList, userMealToAdd) -> {
-                            previousList.forEach(userMealWithExceed -> {
-                                userMealWithExceed.setExceed(cm.get(userMealWithExceed.getDate()) > caloriesPerDay);
-                            });
-                            userMealToAdd.setExceed(cm.get(userMealToAdd.getDate()) > caloriesPerDay);
+                            caloriesMap.put(userMealToAdd.getDate(), caloriesMap.getOrDefault(userMealToAdd.getDate(), 0) + userMealToAdd.getCalories());
+                            if (mealList.get(mealList.size() - 1).equals(userMealToAdd)) {
+                                previousList.forEach(userMealWithExceed -> {
+                                    userMealWithExceed.setExceed(caloriesMap.get(userMealWithExceed.getDate()) > caloriesPerDay);
+                                });
+                            }
                             if (TimeUtil.isBetween(userMealToAdd.getTime(), startTime, endTime)) {
-                                previousList.add(userMealToAdd);
+                                previousList.add(toMealWithExceed(userMealToAdd, caloriesMap.get(userMealToAdd.getDate()) > caloriesPerDay));
                             }
                         },
                         (leftList, rightList) -> {
