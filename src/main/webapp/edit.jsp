@@ -5,7 +5,7 @@
 <html>
 <head>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
-    <title>Резюме ${meal.description}</title>
+    <title>Блюдо ${meal.description}</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>

@@ -17,6 +17,17 @@ import static java.util.stream.Collectors.toList;
 
 public class MealsUtil {
 
+    public static final List<Meal> MEALS = Arrays.asList(
+            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Девочка Лена", 500),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Мыльная пена", 1000),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Крокодил Гена", 500),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Телевизионная антенна", 1000),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Цирковая арена", 500),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Флакон ацетилена", 510)
+    );
+
+    public static final int CALORIES = 2000;
+
     public static List<MealTo> getFilteredWithExcess(Collection<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
                 .collect(

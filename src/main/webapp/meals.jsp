@@ -22,12 +22,12 @@
     </tr>
     <c:forEach items="${meals}" var="meal">
         <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
-        <tr data-mealExcess="<%=meal.isExcess()%>">
+        <tr data-mealExcess="${meal.excess}">
             <th><%=ru.javawebinar.topjava.util.TimeUtil.dateToHtml(meal.getDateTime())%>
             </th>
-            <th><%=meal.getDescription()%>
+            <th>${meal.description}
             </th>
-            <th><%=meal.getCalories()%>
+            <th>${meal.calories}
             </th>
             <th><a href="meals?id=${meal.id}&action=edit">Edit</a></th>
             <th><a href="meals?id=${meal.id}&action=delete">Delete</a></th>

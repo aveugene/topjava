@@ -8,9 +8,9 @@ public interface Storage {
 
     void save(Meal meal);
 
-    Meal get(String id);
+    Meal get(int id);
 
-    void delete(String id);
+    void delete(int id);
 
     Collection<Meal> getAll();
 }
