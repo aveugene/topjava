@@ -10,7 +10,7 @@
 <body>
 <h3><a href="index.html">Home</a></h3>
 <hr>
-<h2>Meals</h2>
+<h2>Meals</h2> <a href="meals?action=add">Новая еда</a>
 
 <table border="1" cellpadding="8" cellspacing="0">
     <tr>
@@ -29,8 +29,8 @@
             </th>
             <th><%=meal.getCalories()%>
             </th>
-            <th>Edit</th>
-            <th>Delete</th>
+            <th><a href="meals?id=${meal.id}&action=edit">Edit</a></th>
+            <th><a href="meals?id=${meal.id}&action=delete">Delete</a></th>
         </tr>
     </c:forEach>
 </table>
