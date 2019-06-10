@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public interface Storage {
 
-    void save(Meal meal);
+    Meal save(Meal meal);
 
     Meal get(int id);
 

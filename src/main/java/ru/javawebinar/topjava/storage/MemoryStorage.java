@@ -2,7 +2,8 @@ package ru.javawebinar.topjava.storage;
 
 import ru.javawebinar.topjava.model.Meal;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -11,11 +12,12 @@ public class MemoryStorage implements Storage {
     private AtomicInteger counter = new AtomicInteger();
 
     @Override
-    public void save(Meal meal) {
-        if (meal.getId() == 0) {
+    public Meal save(Meal meal) {
+        if (meal.getId() == null) {
             meal.setId(counter.incrementAndGet());
         }
         storage.put(meal.getId(), meal);
+        return meal;
     }
 
     @Override

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.util.TimeUtil.stringToDate;
@@ -33,7 +34,7 @@ public class MealServlet extends HttpServlet {
         log.debug("redirect to meals");
         String action = request.getParameter("action");
 
-        switch (action == null ? "default" : action) {
+        switch (action == null ? "" : action) {
             case "delete":
                 int id = getId(request);
                 log.debug("Delete meal with id " + id);
@@ -51,18 +52,19 @@ public class MealServlet extends HttpServlet {
         }
     }
 
-    private int getId(HttpServletRequest request) {
-        return Integer.parseInt(request.getParameter("id"));
-    }
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
-        int id = getId(request);
+        String id = request.getParameter("id");
         String datetime = request.getParameter("datetime");
         String description = request.getParameter("description");
         String calories = request.getParameter("calories");
-        log.debug("Add/Edit meal with id " + id);
-        storage.save(new Meal(id, stringToDate(datetime), description, Integer.parseInt(calories)));
+        log.debug("Add/Edit meal with id >" + id + "<");
+        storage.save(new Meal((id.isEmpty() ? null : Integer.parseInt(id)), stringToDate(datetime), description, Integer.parseInt(calories)));
         response.sendRedirect("meals");
     }
+
+    private int getId(HttpServletRequest request) {
+        return Integer.parseInt(Objects.requireNonNull(request.getParameter("id")));
+    }
+
 }
