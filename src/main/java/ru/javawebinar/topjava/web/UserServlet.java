@@ -9,9 +9,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
+import static ru.javawebinar.topjava.web.SecurityUtil.setAuthUserId;
 
 public class UserServlet extends HttpServlet {
     private static final Logger log = getLogger(UserServlet.class);
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        String userId = request.getParameter("userId");
+        setAuthUserId(Integer.parseInt(userId));
+        response.sendRedirect("meals");
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
