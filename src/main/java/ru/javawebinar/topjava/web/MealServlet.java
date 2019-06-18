@@ -25,13 +25,20 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
+    private ConfigurableApplicationContext appCtx;
     private MealRestController mealRestController;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         mealRestController = appCtx.getBean(MealRestController.class);
+    }
+
+    @Override
+    public void destroy() {
+        appCtx.close();
+        super.destroy();
     }
 
     @Override
@@ -54,13 +61,6 @@ public class MealServlet extends HttpServlet {
                 mealRestController.update(meal, getId(request));
             }
             response.sendRedirect("meals");
-        } else if (action.equals("filter")) {
-            LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
-            LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
-            LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
-            LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
-            request.setAttribute("meals", mealRestController.getFiltered(startDate, endDate, startTime, endTime));
-            request.getRequestDispatcher("/meals.jsp").forward(request, response);
         }
     }
 
@@ -69,6 +69,14 @@ public class MealServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         switch (action == null ? "all" : action) {
+            case "filter":
+                LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
+                LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
+                LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
+                LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
+                request.setAttribute("meals", mealRestController.getFiltered(startDate, endDate, startTime, endTime));
+                request.getRequestDispatcher("/meals.jsp").forward(request, response);
+                break;
             case "delete":
                 int id = getId(request);
                 log.info("Delete {}", id);

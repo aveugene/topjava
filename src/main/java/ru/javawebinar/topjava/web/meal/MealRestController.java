@@ -9,9 +9,7 @@ import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -67,12 +65,12 @@ public class MealRestController {
         log.info("get filtered meals for user {} between {} {} and {} {}", userId, startDate, startTime, endDate, endTime);
         return MealsUtil.getFilteredWithExcess(
                 service.getFiltered(
-                        startDate != null ? LocalDateTime.of(startDate, LocalTime.MIN) : LocalDateTime.of(1, Month.SEPTEMBER, 1, 0, 0),
-                        endDate != null ? LocalDateTime.of(endDate, LocalTime.MAX) : LocalDateTime.of(9999, Month.SEPTEMBER, 1, 0, 0),
+                        startDate != null ? startDate : LocalDate.MIN,
+                        endDate != null ? endDate : LocalDate.MAX,
                         userId),
                 authUserCaloriesPerDay(),
-                startTime == null ? LocalTime.MIN : startTime,
-                endTime == null ? LocalTime.MAX : endTime
+                startTime != null ? startTime : LocalTime.MIN,
+                endTime != null ? endTime : LocalTime.MAX
         );
     }
 }
