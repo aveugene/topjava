@@ -65,8 +65,8 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     private List<Meal> getSortedList(int userId, Predicate<Meal> filter) {
         Map<Integer, Meal> userMeals = repository.get(userId);
         return userMeals == null ? new ArrayList<>() : userMeals.values().stream()
-                .sorted(MEAL_COMPARATOR)
                 .filter(filter)
+                .sorted(MEAL_COMPARATOR)
                 .collect(Collectors.toList());
     }
 }
