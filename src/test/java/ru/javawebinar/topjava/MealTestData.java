@@ -34,7 +34,7 @@ public class MealTestData {
 
     public static void assertMatch(List<Meal> actual, List<Meal> expected) {
         for (int i = 0; i < actual.size(); i++) {
-            assertThat(actual.get(i)).isEqualToIgnoringNullFields(expected.get(i));
+            assertThat(actual.get(i)).isEqualToComparingFieldByField(expected.get(i));
         }
     }
 }
