@@ -32,9 +32,11 @@ public class MealTestData {
     public static final Meal MEAL9 = new Meal(MEAL_ID9, LocalDateTime.of(2015, Month.JUNE, 30, 12, 0), "Обед", 900);
     public static final Meal MEAL10 = new Meal(MEAL_ID10, LocalDateTime.of(2015, Month.JUNE, 30, 18, 0), "Ужин", 750);
 
-    public static void assertMatch(List<Meal> actual, List<Meal> expected) {
-        for (int i = 0; i < actual.size(); i++) {
-            assertThat(actual.get(i)).isEqualToComparingFieldByField(expected.get(i));
-        }
+    public static void assertMatch(List<Meal> actual, Meal... expected) {
+        assertThat(actual).usingFieldByFieldElementComparator().containsExactly(expected);
+    }
+
+    public static void assertMatch(Meal actual, Meal expected) {
+        assertThat(actual).isEqualToComparingFieldByField(expected);
     }
 }

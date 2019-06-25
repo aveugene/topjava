@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -16,10 +15,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
@@ -44,41 +40,45 @@ public class MealServiceTest {
     @Test
     public void get() {
         Meal meal = service.get(MEAL_ID9, ADMIN_ID);
-        assertMatch(service.getAll(ADMIN_ID), Arrays.asList(MEAL10, meal, MEAL8));
+        assertMatch(MEAL9, meal);
     }
 
     @Test
     public void delete() {
         service.delete(MEAL_ID2, USER_ID);
-        assertMatch(service.getAll(USER_ID), Arrays.asList(MEAL7, MEAL6, MEAL5, MEAL4, MEAL3));
+        assertMatch(service.getAll(USER_ID), MEAL7, MEAL6, MEAL5, MEAL4, MEAL3);
     }
 
     @Test
     public void getBetweenDateTimes() {
-        assertMatch(service.getBetweenDateTimes(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), LocalDateTime.of(2015, Month.MAY, 30, 13, 0), USER_ID), Arrays.asList(MEAL3));
+        assertMatch(service.getBetweenDateTimes(
+                LocalDateTime.of(2015, Month.MAY, 30, 13, 0),
+                LocalDateTime.of(2015, Month.MAY, 30, 13, 0),
+                USER_ID), MEAL3);
     }
 
     @Test
     public void getBetweenDates() {
-        assertMatch(service.getBetweenDates(LocalDate.of(2015, Month.MAY, 30), LocalDate.of(2015, Month.MAY, 30), USER_ID), Arrays.asList(MEAL4, MEAL3, MEAL2));
+        assertMatch(service.getBetweenDates(LocalDate.of(2015, Month.MAY, 30), LocalDate.of(2015, Month.MAY, 30), USER_ID), MEAL4, MEAL3, MEAL2);
     }
+
     @Test
     public void getAll() {
-        assertMatch(service.getAll(USER_ID), Arrays.asList(MEAL7, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2));
+        assertMatch(service.getAll(USER_ID), MEAL7, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2);
     }
 
     @Test
     public void update() {
         Meal updatedMeal = new Meal(MEAL_ID10, LocalDateTime.of(2015, Month.JUNE, 30, 17, 5), "Полдник", 250);
         service.update(updatedMeal, ADMIN_ID);
-        assertMatch(service.getAll(ADMIN_ID), Arrays.asList(updatedMeal, MEAL9, MEAL8));
+        assertMatch(service.get(MEAL_ID10, ADMIN_ID), updatedMeal);
     }
 
     @Test
     public void create() {
         Meal newMeal = new Meal(LocalDateTime.of(2015, Month.MAY, 31, 17, 5), "Полдник", 250);
         service.create(newMeal, USER_ID);
-        assertMatch(service.getAll(USER_ID), Arrays.asList(MEAL7, newMeal, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2));
+        assertMatch(service.getAll(USER_ID), MEAL7, newMeal, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2);
     }
 
     @Test(expected = NotFoundException.class)
@@ -100,6 +100,6 @@ public class MealServiceTest {
     public void createDuplicate() {
         Meal newMeal = new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000);
         service.create(newMeal, USER_ID);
-        assertMatch(service.getAll(USER_ID), Arrays.asList(MEAL7, newMeal, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2));
+        assertMatch(service.getAll(USER_ID), MEAL7, newMeal, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2);
     }
 }
