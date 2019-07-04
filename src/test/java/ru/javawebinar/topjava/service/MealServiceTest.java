@@ -1,12 +1,10 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.AfterClass;
-import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -19,7 +17,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.time.LocalDate;
 import java.time.Month;
 
-import static org.slf4j.LoggerFactory.getLogger;
+import static ru.javawebinar.topjava.LogRule.LOG;
 import static ru.javawebinar.topjava.LogRule.REPORT;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -32,7 +30,6 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
-    private static final Logger log = getLogger(LogRule.class);
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -115,7 +112,7 @@ public class MealServiceTest {
 
     @AfterClass
     public static void writeReport() {
-        log.debug("Final report:");
-        REPORT.forEach(log::debug);
+        LOG.debug("Final report:");
+        REPORT.forEach(LOG::debug);
     }
 }

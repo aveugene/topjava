@@ -10,7 +10,7 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class LogRule extends TestWatcher {
-    private final Logger log = getLogger(LogRule.class);
+    public static final Logger LOG = getLogger(LogRule.class);
     private long start = 0;
     public static List<String> REPORT = new ArrayList<>();
 
@@ -22,8 +22,8 @@ public class LogRule extends TestWatcher {
     @Override
     protected void finished(Description description) {
         long timeElapsed = System.currentTimeMillis() - start;
-        String logLine = String.format("Test %s elapsed %dms.", description.getDisplayName(), timeElapsed);
-        log.debug(logLine);
+        String logLine = String.format("Test %s elapsed %dms.", description.getMethodName(), timeElapsed);
+        LOG.debug(logLine);
         REPORT.add(logLine);
     }
 }
