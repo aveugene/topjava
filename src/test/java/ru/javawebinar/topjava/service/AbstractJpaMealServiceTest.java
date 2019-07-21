@@ -9,7 +9,7 @@ import java.time.Month;
 import static java.time.LocalDateTime.of;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
-public class AbstractJpaMealServiceTest extends AbstractMealServiceTest {
+public abstract class AbstractJpaMealServiceTest extends AbstractMealServiceTest {
 
     @Test
     public void testValidation() throws Exception {
