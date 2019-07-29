@@ -56,7 +56,7 @@ class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void createWithLocation() throws Exception {
+    void testCreateWithLocation() throws Exception {
         Meal created = new Meal(of(2015, Month.MAY, 30, 6, 0), "Ранний завтрак", 300);
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -70,7 +70,7 @@ class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void update() throws Exception {
+    void testUpdate() throws Exception {
         Meal updated = new Meal(MEAL1_ID, of(2015, Month.MAY, 30, 10, 0), "Обновлённый завтрак", 510);
         ResultActions action = mockMvc.perform(put(REST_URL + MEAL1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -79,11 +79,29 @@ class MealRestControllerTest extends AbstractControllerTest {
         assertMatch(mealService.get(MEAL1_ID, START_SEQ), updated);
     }
 
+/*
     @Test
     void getBetween() throws Exception {
         mockMvc.perform(get(REST_URL + "between?startDateTime=2015-05-30T00:00:00&endDateTime=2015-05-30T13:00:00"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(contentJson(List.of(createWithExcess(MEAL2, false), createWithExcess(MEAL1, false))));
+    }
+*/
+
+    @Test
+    void testGetBetween() throws Exception {
+        mockMvc.perform(get(REST_URL + "between?startDate=2015-05-30&startTime=00:00:00&endDate=2015-05-30&endTime=13:00:00"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(contentJson(List.of(createWithExcess(MEAL2, false), createWithExcess(MEAL1, false))));
+    }
+
+    @Test
+    void testGetBetweenBlank() throws Exception {
+        mockMvc.perform(get(REST_URL + "between"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(contentJson(MEALSTO));
     }
 }
