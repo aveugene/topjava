@@ -70,7 +70,7 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Test
     void testUpdate() throws Exception {
         Meal updated = getUpdated();
-        ResultActions action = mockMvc.perform(put(REST_URL + MEAL1_ID)
+        mockMvc.perform(put(REST_URL + MEAL1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
