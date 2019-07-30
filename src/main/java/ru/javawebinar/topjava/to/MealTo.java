@@ -4,17 +4,22 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class MealTo {
-    private Integer id;
+    private final Integer id;
 
-    private LocalDateTime dateTime;
+    private final LocalDateTime dateTime;
 
-    private String description;
+    private final String description;
 
-    private int calories;
+    private final int calories;
 
-    private boolean excess;
+    private final boolean excess;
 
     public MealTo() {
+        this.id = 0;
+        this.dateTime = LocalDateTime.now();
+        this.description = "";
+        this.calories = 0;
+        this.excess = true;
     }
 
     public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
