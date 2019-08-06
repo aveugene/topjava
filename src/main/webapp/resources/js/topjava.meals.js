@@ -1,25 +1,19 @@
 // $(document).ready(function () {
 $(function () {
     makeEditable({
-            ajaxUrl: "ajax/admin/users/",
+            ajaxUrl: "ajax/profile/meals/",
             datatableApi: $("#datatable").DataTable({
                 "paging": false,
                 "info": true,
                 "columns": [
                     {
-                        "data": "name"
+                        "data": "dateTime"
                     },
                     {
-                        "data": "email"
+                        "data": "description"
                     },
                     {
-                        "data": "roles"
-                    },
-                    {
-                        "data": "enabled"
-                    },
-                    {
-                        "data": "registered"
+                        "data": "calories"
                     },
                     {
                         "defaultContent": "Edit",
@@ -33,29 +27,29 @@ $(function () {
                 "order": [
                     [
                         0,
-                        "asc"
+                        "desc"
                     ]
                 ]
             })
         }
     );
+
+    $("#clear").click(function () {
+        $('#filterForm').find(":input").val("");
+    });
 });
 
-function updateTable() {
-    $.get(context.ajaxUrl, function (data) {
-        context.datatableApi.clear().rows.add(data).draw();
+function filter() {
+    $.ajax({
+        type: "POST",
+        url: context.ajaxUrl + "filter",
+        data: $('#filterForm').serialize(),
+        success: function (data) {
+            context.datatableApi.clear().rows.add(data).draw()
+        }
     });
 }
 
-function enable(checkbox, id) {
-    var enabled = checkbox.is(":checked");
-    $.ajax({
-        url: context.ajaxUrl + id,
-        type: "POST",
-        data: "enabled=" + enabled,
-        success: function () {
-            checkbox.closest("tr").attr("data-userEnabled", enabled);
-            successNoty(enabled ? "enabled" : "disabled")
-        }
-    });
+function updateTable() {
+    filter();
 }
