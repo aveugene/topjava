@@ -43,7 +43,7 @@ $(function () {
 
 function updateTable() {
     $.get(context.ajaxUrl, function (data) {
-        context.datatableApi.clear().rows.add(data).draw();
+        redrawTable(data);
     });
 }
 
@@ -53,9 +53,10 @@ function enable(checkbox, id) {
         url: context.ajaxUrl + id,
         type: "POST",
         data: "enabled=" + enabled,
-        success: function () {
-            checkbox.closest("tr").attr("data-userEnabled", enabled);
-            successNoty(enabled ? "enabled" : "disabled")
-        }
+    }).done(function (data) {
+        checkbox.closest("tr").attr("data-userEnabled", enabled);
+        successNoty(enabled ? "enabled" : "disabled")
+    }).fail(function (jqXHR, textStatus) {
+        checkbox.prop("checked", !enabled);
     });
 }

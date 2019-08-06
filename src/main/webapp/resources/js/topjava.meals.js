@@ -35,7 +35,8 @@ $(function () {
     );
 
     $("#clear").click(function () {
-        $('#filterForm').find(":input").val("");
+        $('#filterForm')[0].reset();
+        updateTable();
     });
 });
 
@@ -45,7 +46,7 @@ function filter() {
         url: context.ajaxUrl + "filter",
         data: $('#filterForm').serialize(),
         success: function (data) {
-            context.datatableApi.clear().rows.add(data).draw()
+            redrawTable(data)
         }
     });
 }
