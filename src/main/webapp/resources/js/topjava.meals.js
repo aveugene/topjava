@@ -57,21 +57,41 @@ $(function () {
                 ]
             ],
             "createdRow": function (row, data, dataIndex) {
-                $(row).attr('data-mealExcess', data.excess ? "true" : "false");
+                $(row).attr('data-mealExcess', data.excess);
             }
         }),
         updateTable: updateFilteredTable
     });
 
-    $('#startDate, #endDate').datetimepicker({
+    const startDate= $('#startDate');
+    const endDate = $('#endDate');
+    startDate.datetimepicker({
         timepicker: false,
         formatDate: 'Y-m-d',
-        format: 'Y-m-d'
+        format: 'Y-m-d',
+        onShow: function (ct) {
+            this.setOptions({
+                maxDate: endDate.val() ? endDate.val() : false
+            })
+        }
     });
+
+    endDate.datetimepicker({
+        timepicker: false,
+        formatDate: 'Y-m-d',
+        format: 'Y-m-d',
+        onShow: function (ct) {
+            this.setOptions({
+                minDate: startDate.val() ? startDate.val() : false
+            })
+        }
+    });
+
     $('#startTime, #endTime').datetimepicker({
         datepicker: false,
         format: 'H:i'
     });
+
     $('#dateTime').datetimepicker({
         format: 'Y-m-d H:i'
     });
