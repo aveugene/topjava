@@ -17,11 +17,17 @@ function add() {
     $("#editRow").modal();
 }
 
+function removeTFromDate(value) {
+    return value.replace('T', ' ').substr(0, 16);
+}
+
 function updateRow(id) {
     $("#modalTitle").html(i18n["editTitle"]);
     $.get(context.ajaxUrl + id, function (data) {
         $.each(data, function (key, value) {
-            form.find("input[name='" + key + "']").val(value);
+            form.find("input[name='" + key + "']").val(
+                key === "dateTime" ? removeTFromDate(value) : value
+            );
         });
         $('#editRow').modal();
     });
