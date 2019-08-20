@@ -30,3 +30,15 @@
 
 #### validate with Error
 `curl -s -X POST -d '{}' -H 'Content-Type: application/json' http://localhost:8080/topjava/rest/admin/users --user admin@gmail.com:admin`
+
+#### update profile with existing email
+`curl -s -X PUT -d '{"id":"100000","name":"lazha","email":"admin@gmail.com","password":"password","caloriesPerDay":300}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/topjava/rest/profile --user user@yandex.ru:password`
+
+#### create profile from anonymous
+`curl -s -X POST -d '{"name":"lazha","email":"admin@gmail.com","password":"password","caloriesPerDay":300}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/topjava/rest/profile/register`
+
+#### update user with existing email from admin
+`curl -s -X PUT -d '{"name":"lazha","email":"admin@gmail.com","password":"password","caloriesPerDay":300}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/topjava/rest/admin/users/100000 --user admin@gmail.com:admin`
+
+#### create user with existing email from admin
+`curl -s -X POST -d '{"name":"lazha","email":"admin@gmail.com","password":"password","caloriesPerDay":300}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/topjava/rest/admin/users --user admin@gmail.com:admin`
