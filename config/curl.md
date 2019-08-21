@@ -42,3 +42,9 @@
 
 #### create user with existing email from admin
 `curl -s -X POST -d '{"name":"lazha","email":"admin@gmail.com","password":"password","caloriesPerDay":300}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/topjava/rest/admin/users --user admin@gmail.com:admin`
+
+#### update meal with duplicated dateTime
+`curl -s -X PUT -d '{"dateTime":"2015-05-30T10:00", "description":"update 100003 with dateTime from 100002", "calories":200}' -H 'Content-Type: application/json' http://localhost:8080/topjava/rest/profile/meals/100003 --user user@yandex.ru:password`
+
+#### create meal with duplicated dateTime
+`curl -s -X POST -d '{"dateTime":"2015-05-30T10:00", "description":"create meal with dateTime from 100002", "calories":200}' -H 'Content-Type: application/json' http://localhost:8080/topjava/rest/profile/meals --user user@yandex.ru:password`

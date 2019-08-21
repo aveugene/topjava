@@ -2,6 +2,9 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,9 +25,7 @@ import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
-
-
-import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 
 import static ru.javawebinar.topjava.util.exception.ErrorType.*;
@@ -33,6 +34,12 @@ import static ru.javawebinar.topjava.util.exception.ErrorType.*;
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
 public class ExceptionInfoHandler {
     private static Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
+
+    public static final String EXCEPTION_DUPLICATEEMAIL = "exception.duplicateEmail";
+    public static final String EXCEPTION_DUPLICATEDATETIME = "exception.duplicateDatetime";
+
+    @Autowired
+    protected MessageSource messageSource;
 
     //  http://stackoverflow.com/a/22358422/548473
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
@@ -44,7 +51,13 @@ public class ExceptionInfoHandler {
     @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
-        return logAndGetErrorInfo(req, e, true, DATA_ERROR);
+        Map<String, String> errorsMap = Map.of("email", EXCEPTION_DUPLICATEEMAIL, "date_time", EXCEPTION_DUPLICATEDATETIME);
+        String rootCauseMessage = ValidationUtil.getRootCause(e).toString();
+        String[] errors = errorsMap.entrySet().stream()
+                .filter(error -> rootCauseMessage.contains(error.getKey()))
+                .map(map -> messageSource.getMessage(map.getValue(), null, LocaleContextHolder.getLocale()))
+                .toArray(String[]::new);
+        return logAndGetErrorInfo(req, e, true, DATA_ERROR, errors);
     }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
@@ -72,8 +85,6 @@ public class ExceptionInfoHandler {
                 })
                 .filter(Objects::nonNull)
                 .toArray(String[]::new);
-        Arrays.stream(errors).forEach(System.out::println);
-
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, errors);
     }
 
@@ -91,6 +102,6 @@ public class ExceptionInfoHandler {
         } else {
             log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         }
-        return new ErrorInfo(req.getRequestURL(), errorType, errors.length != 0 ? errors : new String[] {rootCause.toString()});
+        return new ErrorInfo(req.getRequestURL(), errorType, errors.length != 0 ? errors : new String[]{rootCause.toString()});
     }
 }
