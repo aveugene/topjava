@@ -41,17 +41,19 @@ public class ExceptionInfoHandler {
     @Autowired
     protected MessageSource messageSource;
 
+    Map<String, String> errorsMap = Map.of("users_unique_email_idx", EXCEPTION_DUPLICATEEMAIL, "meals_unique_user_datetime_idx", EXCEPTION_DUPLICATEDATETIME);
+
     //  http://stackoverflow.com/a/22358422/548473
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(NotFoundException.class)
     public ErrorInfo handleError(HttpServletRequest req, NotFoundException e) {
-        return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND);
+        String[] messageSplitted = ValidationUtil.getRootCause(e).toString().split(": ", 2);
+        return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND, messageSplitted[1]);
     }
 
     @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
-        Map<String, String> errorsMap = Map.of("email", EXCEPTION_DUPLICATEEMAIL, "date_time", EXCEPTION_DUPLICATEDATETIME);
         String rootCauseMessage = ValidationUtil.getRootCause(e).toString();
         String[] errors = errorsMap.entrySet().stream()
                 .filter(error -> rootCauseMessage.contains(error.getKey()))
