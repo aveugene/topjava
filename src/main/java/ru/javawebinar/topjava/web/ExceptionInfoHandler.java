@@ -47,8 +47,7 @@ public class ExceptionInfoHandler {
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(NotFoundException.class)
     public ErrorInfo handleError(HttpServletRequest req, NotFoundException e) {
-        String[] messageSplitted = ValidationUtil.getRootCause(e).toString().split(": ", 2);
-        return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND, messageSplitted[1]);
+        return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND);
     }
 
     @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
@@ -104,6 +103,6 @@ public class ExceptionInfoHandler {
         } else {
             log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         }
-        return new ErrorInfo(req.getRequestURL(), errorType, errors.length != 0 ? errors : new String[]{rootCause.toString()});
+        return new ErrorInfo(req.getRequestURL(), errorType, errors.length != 0 ? errors : new String[]{rootCause.getLocalizedMessage()});
     }
 }
